@@ -8,7 +8,7 @@ public class PlayerMovement : MonoBehaviour
     public Transform player1;
     public Transform player2;
     public float moveSpeed = 3.0f;
-    public float jumpForce = 2.0f; // 统一的跳跃力量
+    public float jumpForce = 7.0f; // 统一的跳跃力量
 
     private Rigidbody2D rb1;
     private Rigidbody2D rb2;
@@ -25,6 +25,7 @@ public class PlayerMovement : MonoBehaviour
     private int jumpCount1;
     private int jumpCount2;
     private Animator animator1;
+    private Animator animator2;
 
     void Start()
     {
@@ -35,6 +36,7 @@ public class PlayerMovement : MonoBehaviour
         jumpCount1 = maxJumpCount;
         jumpCount2 = maxJumpCount;
         animator1=player1.GetComponent<Animator>();  
+        animator2=player2.GetComponent<Animator>();
     }
 
     void Update()
@@ -43,6 +45,13 @@ public class PlayerMovement : MonoBehaviour
         CheckGround();
         Jump();
        
+    }
+    public void hit (string name)
+    {
+        if (name == "player1")
+            animator1.SetTrigger("ishit");
+        else
+            animator2.SetTrigger("ishit");
     }
     void CheckGround()
     {
@@ -70,7 +79,9 @@ public class PlayerMovement : MonoBehaviour
         {
             rb1.velocity = new Vector2(rb1.velocity.x, jumpForce);
             jumpCount1--;
-            animator1.SetInteger("count", jumpCount1);
+            animator1.SetTrigger("jump1");
+            if (jumpCount1 == 0)
+             animator1.SetTrigger("jump2");
 
             // 空中跳跃时保持水平速度
             if (!isGround1 && jumpCount1 == maxJumpCount - 1)
@@ -84,6 +95,10 @@ public class PlayerMovement : MonoBehaviour
         {
             rb2.velocity = new Vector2(rb2.velocity.x, jumpForce);
             jumpCount2--;
+            animator2.SetTrigger("jump1");
+            if (jumpCount2 == 0)
+                animator2.SetTrigger("jump2");
+
 
             // 空中跳跃时保持水平速度
             if (!isGround2 && jumpCount2 == maxJumpCount - 1)
@@ -117,6 +132,8 @@ public class PlayerMovement : MonoBehaviour
 
         // 更新动画参数（使用实际移动速度）
         animator1.SetFloat("speed", Mathf.Abs(moveX1));
+        animator2.SetFloat("speed",Mathf.Abs(moveX2));  
+
     }
 
     private void Flip1()

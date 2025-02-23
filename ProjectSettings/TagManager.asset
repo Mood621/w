@@ -4,10 +4,8 @@
 TagManager:
   serializedVersion: 2
   tags:
-  - orange
-  - strawberry
-  - s
-  - Trap
+  - player1
+  - player2
   layers:
   - Default
   - TransparentFX
